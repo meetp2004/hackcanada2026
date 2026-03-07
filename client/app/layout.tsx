@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PropertySeek — Find Homes Across Canada",
-  description: "Explore 50+ verified Canadian real estate listings on an interactive 3D map. Filter by price, beds, and city.",
+  title: "MapleEstate AI — Canadian Real Estate Intelligence",
+  description: "Live insights into housing supply, pricing trends, and market momentum powered by AI.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
