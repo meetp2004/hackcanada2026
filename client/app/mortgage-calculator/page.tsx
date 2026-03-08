@@ -62,15 +62,15 @@ function SliderRow({
   return (
     <div style={{ marginBottom: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
-        <label style={{ fontSize: '13px', fontWeight: 500, color: '#374151' }}>{label}</label>
+        <label style={{ fontSize: '13px', fontWeight: 500, color: '#6b7280' }}>{label}</label>
         <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>{display}</span>
       </div>
       <input
         type="range" min={min} max={max} step={step} value={value}
         onChange={e => onChange(Number(e.target.value))}
-        style={{ width: '100%', accentColor: '#111827', cursor: 'pointer', height: '4px' }}
+        style={{ width: '100%', accentColor: '#16a34a', cursor: 'pointer', height: '4px' }}
       />
-      {hint && <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '3px' }}>{hint}</div>}
+      {hint && <div style={{ fontSize: '11px', color: '#6b7280', marginTop: '3px' }}>{hint}</div>}
     </div>
   )
 }
@@ -84,15 +84,15 @@ function CostBar({ principal, interest, tax }: { principal: number; interest: nu
   return (
     <div>
       <div style={{ display: 'flex', height: '8px', borderRadius: '99px', overflow: 'hidden', marginBottom: '10px' }}>
-        <div style={{ width: `${pPct}%`, background: '#111827' }} />
-        <div style={{ width: `${iPct}%`, background: '#9ca3af' }} />
-        <div style={{ width: `${tPct}%`, background: '#e5e7eb' }} />
+        <div style={{ width: `${pPct}%`, background: '#16a34a' }} />
+        <div style={{ width: `${iPct}%`, background: '#4ade80' }} />
+        <div style={{ width: `${tPct}%`, background: 'rgba(34,197,94,0.2)' }} />
       </div>
       <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
         {[
-          { label: 'Principal', color: '#111827', val: fmt(principal) },
-          { label: 'Interest', color: '#9ca3af', val: fmt(interest) },
-          { label: 'Property tax', color: '#d1d5db', val: fmt(tax) },
+          { label: 'Principal', color: '#16a34a', val: fmt(principal) },
+          { label: 'Interest', color: '#4ade80', val: fmt(interest) },
+          { label: 'Property tax', color: 'rgba(34,197,94,0.4)', val: fmt(tax) },
         ].map(({ label, color, val }) => (
           <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: color, flexShrink: 0 }} />
@@ -119,7 +119,7 @@ function GDSGauge({ gds }: { gds: number }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
         <div>
           <div style={{ fontSize: '12px', fontWeight: 600, color: '#374151' }}>GDS Ratio</div>
-          <div style={{ fontSize: '11px', color: '#9ca3af' }}>Gross Debt Service · based on $105K income</div>
+          <div style={{ fontSize: '11px', color: '#6b7280' }}>Gross Debt Service · based on $105K income</div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: '20px', fontWeight: 700, color: status.color }}>{fmtPct(gds)}</div>
@@ -133,10 +133,10 @@ function GDSGauge({ gds }: { gds: number }) {
         }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
-        <span style={{ fontSize: '10px', color: '#9ca3af' }}>0%</span>
-        <span style={{ fontSize: '10px', color: '#16a34a' }}>32% (healthy)</span>
+        <span style={{ fontSize: '10px', color: '#6b7280' }}>0%</span>
+        <span style={{ fontSize: '10px', color: '#22c55e' }}>32% (healthy)</span>
         <span style={{ fontSize: '10px', color: '#d97706' }}>39%</span>
-        <span style={{ fontSize: '10px', color: '#9ca3af' }}>50%+</span>
+        <span style={{ fontSize: '10px', color: '#6b7280' }}>50%+</span>
       </div>
     </div>
   )
@@ -147,7 +147,7 @@ function Row({ label, value, sub }: { label: string; value: string; sub?: string
   return (
     <div style={{
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      padding: '10px 0', borderBottom: '1px solid #f3f4f6',
+      padding: '10px 0', borderBottom: '1px solid rgba(0,0,0,0.06)',
     }}>
       <span style={{ fontSize: '13px', color: '#6b7280' }}>{label}</span>
       <div style={{ textAlign: 'right' }}>
@@ -178,7 +178,7 @@ export default function MortgageCalculatorPage() {
     : homePrice * 0.2
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fafaf8' }}>
+    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
       <Navbar />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '80px 24px 48px' }}>
@@ -228,8 +228,8 @@ export default function MortgageCalculatorPage() {
             {/* Amortization selector */}
             <div style={{ marginBottom: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
-                <label style={{ fontSize: '13px', fontWeight: 500, color: '#374151' }}>Amortization</label>
-                <span style={{ fontSize: '14px', fontWeight: 700, color: '#111827' }}>{loanTerm} yrs</span>
+                <label style={{ fontSize: '13px', fontWeight: 500, color: '#9ca3af' }}>Amortization</label>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>{loanTerm} yrs</span>
               </div>
               <div style={{ display: 'flex', gap: '6px' }}>
                 {[10, 15, 20, 25, 30].map(y => (
@@ -238,9 +238,9 @@ export default function MortgageCalculatorPage() {
                     onClick={() => setLoanTerm(y)}
                     style={{
                       flex: 1, padding: '7px 0',
-                      background: loanTerm === y ? '#111827' : '#f9fafb',
+                      background: loanTerm === y ? '#16a34a' : '#f3f4f6',
                       color: loanTerm === y ? 'white' : '#6b7280',
-                      border: `1px solid ${loanTerm === y ? '#111827' : '#e5e7eb'}`,
+                      border: `1px solid ${loanTerm === y ? '#16a34a' : '#e5e7eb'}`,
                       borderRadius: '7px', cursor: 'pointer',
                       fontSize: '12px', fontWeight: loanTerm === y ? 600 : 400,
                       transition: 'all 0.15s',
@@ -260,13 +260,13 @@ export default function MortgageCalculatorPage() {
             {/* CMHC notice */}
             {m.cmhc > 0 && (
               <div style={{
-                padding: '12px', background: '#fffbeb', borderRadius: '8px',
-                border: '1px solid #fde68a', marginTop: '4px',
+                padding: '12px', background: 'rgba(217,119,6,0.1)', borderRadius: '8px',
+                border: '1px solid rgba(217,119,6,0.3)', marginTop: '4px',
               }}>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: '#92400e', marginBottom: '2px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: '#fbbf24', marginBottom: '2px' }}>
                   CMHC Insurance applies
                 </div>
-                <div style={{ fontSize: '12px', color: '#92400e' }}>
+                <div style={{ fontSize: '12px', color: '#d97706' }}>
                   {fmtPct(m.insRate * 100)} of loan = <strong>{fmt(m.cmhc)}</strong> added to mortgage.
                   Put 20%+ down to avoid this.
                 </div>
@@ -287,10 +287,10 @@ export default function MortgageCalculatorPage() {
               </div>
 
               <div style={{ marginBottom: '6px' }}>
-                <span style={{ fontSize: '42px', fontWeight: 700, color: '#111827', letterSpacing: '-0.03em', fontFamily: 'serif' }}>
+                <span style={{ fontSize: '42px', fontWeight: 700, color: '#22c55e', letterSpacing: '-0.03em', fontFamily: 'serif' }}>
                   {fmt(m.totalMonthly)}
                 </span>
-                <span style={{ fontSize: '14px', color: '#9ca3af', marginLeft: '4px' }}>/mo</span>
+                <span style={{ fontSize: '14px', color: '#6b7280', marginLeft: '4px' }}>/mo</span>
               </div>
               <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '20px' }}>
                 Mortgage {fmt(m.monthly)} + property tax {fmt(m.monthlyTax)}
@@ -330,7 +330,7 @@ export default function MortgageCalculatorPage() {
             href="/mapview"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
-              padding: '10px 20px', background: '#111827', color: 'white',
+              padding: '10px 20px', background: '#16a34a', color: 'white',
               borderRadius: '8px', fontSize: '13px', fontWeight: 600,
               textDecoration: 'none', transition: 'opacity 0.15s',
             }}
