@@ -3,14 +3,18 @@ import './env.js';
 import supabase from './db.js';
 import bb from './backboard.js';
 
+
 // ── SIGNUP ────────────────────────────────────────────────────────────────────
 export async function signup({ email, password, firstName, annualIncome, downPayment, familySize, firstTimeBuyer }) {
+
 
     // 1. Create Supabase Auth user
     const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
     if (authError) throw new Error(`Supabase signup failed: ${authError.message}`);
 
+
     const userId = authData.user.id;
+
 
     // 2. Insert profile row with default persona weights
     const { error: insertError } = await supabase
@@ -32,10 +36,13 @@ export async function signup({ email, password, firstName, annualIncome, downPay
             }
         });
 
+
     if (insertError) throw new Error(`Profile insert failed: ${insertError.message}`);
+
 
     // 3. Create Backboard thread for this user
     const thread = await bb.createThread(process.env.BACKBOARD_ASSISTANT_ID);
+
 
     // 4. Write thread_id back to Supabase
     const { error: updateError } = await supabase
@@ -43,12 +50,16 @@ export async function signup({ email, password, firstName, annualIncome, downPay
         .update({ backboard_thread_id: thread.threadId })
         .eq('id', userId);
 
+
     if (updateError) throw new Error(`Thread ID write failed: ${updateError.message}`);
+
 
     console.log(`[auth] signup: ${email} → thread ${thread.threadId}`);
 
+
     return { userId, email, threadId: thread.threadId, session: authData.session };
 }
+
 
 // ── LOGIN ─────────────────────────────────────────────────────────────────────
 export async function login({ email, password }) {
@@ -56,6 +67,7 @@ export async function login({ email, password }) {
     if (error) throw new Error(`Login failed: ${error.message}`);
     return data.session;
 }
+
 
 // ── GET USER ──────────────────────────────────────────────────────────────────
 export async function getUser(userId) {
@@ -65,8 +77,32 @@ export async function getUser(userId) {
         .eq('id', userId)
         .single();
 
+
     if (error) throw new Error(`User not found: ${error.message}`);
     if (!data.backboard_thread_id) throw new Error(`No Backboard thread for user ${userId}`);
 
+
     return data;
+}
+
+
+// ── VERIFY TOKEN ──────────────────────────────────────────────────────────────
+export async function verifyToken(accessToken) {
+    const { data, error } = await supabase.auth.getUser(accessToken);
+    if (error || !data.user) throw new Error('Invalid or expired token');
+    return { user: data.user };
+}
+
+
+// ── LOGOUT ────────────────────────────────────────────────────────────────────
+export async function logout(accessToken) {
+    try {
+        const { data } = await supabase.auth.getUser(accessToken);
+        if (data?.user) {
+            await supabase.auth.admin.signOut(data.user.id);
+        }
+    } catch (_) {
+        // Best-effort — client will clear its own token regardless
+    }
+    return { success: true };
 }
