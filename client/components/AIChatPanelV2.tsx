@@ -229,7 +229,15 @@ export function AIChatPanel({
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     {/* Voice Toggle Button */}
                     <button
-                        onClick={() => setVoiceOn(!voiceOn)}
+                        onClick={() => {
+                            if (voiceOn) {
+                                audioRef.current?.pause()
+                                audioRef.current = null
+                                window.speechSynthesis?.cancel()
+                                setSpeaking(false)
+                            }
+                            setVoiceOn(v => !v)
+                        }}
                         style={{
                             background: 'none',
                             border: 'none',
