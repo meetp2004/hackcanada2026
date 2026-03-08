@@ -5,18 +5,37 @@
   --font-sans: 'Inter', system-ui, sans-serif;
 }
 
-/* ─── Custom properties ─── */
+/* ─── HomeWay Design System ─── */
 :root {
-  --bg: #ffffff;
-  --bg-muted: #f5f5f5;
+  /* Background colors */
+  --bg: #fafaf8;
+  --bg-card: #ffffff;
+  --bg-deep: #f9fafb;
   --surface: #ffffff;
+  --surface-alt: #f4f4f0;
+
+  /* Text colors */
   --text: #1a1a1a;
-  --text-muted: #6b7280;
-  --text-light: #9ca3af;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --text-light: #d1d5db;
+
+  /* Border colors */
   --border: #e5e7eb;
-  --primary: #1c1c1e;
-  --primary-hover: #2d2d2f;
-  --accent: #1c1c1e;
+
+  /* Brand colors - Primary green */
+  --primary: #1e6b4a;
+  --primary-hover: #2d8f63;
+  --primary-pale: #e8f5ef;
+
+  /* Brand colors - Accent terracotta */
+  --accent: #C8430A;
+  --accent-light: #FEF0EB;
+
+  /* Shadows */
+  --shadow: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
 }
 
 /* ─── Base ─── */

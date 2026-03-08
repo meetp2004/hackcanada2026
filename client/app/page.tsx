@@ -1,7 +1,5 @@
 'use client'
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
 import './styles/landing.css';
 import {
   ArrowRight,
@@ -13,61 +11,18 @@ import {
   CheckIcon
 } from '@/components/icons';
 import { features, steps, problems } from './data/landing-data';
+import Navbar from '@/components/Navbar';
 
 
 
 export default function LandingPage() {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <div style={{ fontFamily: "'Georgia', 'Times New Roman', serif", backgroundColor: "#fafaf8", color: "#1a1a1a", overflowX: "hidden" }}>
 
-      {/* ── TOP ACTIONS ── */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        background: scrolled ? "rgba(255,255,255,0.97)" : "transparent",
-        borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
-        transition: "all 0.3s ease",
-      }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 68, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-          <a href="/" style={{ display: "inline-flex", alignItems: "center" }} aria-label="Go to homepage">
-            <Image
-              src="/image.png"
-              alt="HomeWay logo"
-              width={140}
-              height={100}
-              priority
-              style={{ width: "auto", height: 54, objectFit: "contain" }}
-            />
-          </a>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <a
-              href="#"
-              className="btn-secondary"
-              style={{ minHeight: 44, padding: "11px 20px", justifyContent: "center", whiteSpace: "nowrap" }}
-            >
-              Login
-            </a>
-            <a
-              href="#"
-              className="btn-primary"
-              style={{ minHeight: 44, padding: "11px 20px", justifyContent: "center", whiteSpace: "nowrap" }}
-            >
-              Sign up
-            </a>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* ── HERO ── */}
-      <section style={{ paddingTop: 120, paddingBottom: 80, background: "linear-gradient(160deg, #f0f7f3 0%, #fafaf8 50%, #faf7f0 100%)" }}>
+      <section style={{ paddingTop: 96, paddingBottom: 80, background: "linear-gradient(160deg, #f0f7f3 0%, #fafaf8 50%, #faf7f0 100%)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px" }}>
           <div className="hero-layout" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
 
@@ -75,16 +30,16 @@ export default function LandingPage() {
             <div className="animate-fadeup">
               <div className="hero-badge animate-fadeup delay-1">
                 <span style={{ width: 6, height: 6, background: "var(--primary)", borderRadius: "50%", display: "inline-block" }} />
-                AI-Powered Home Buying Platform
+                Your Home Buying Companion
               </div>
 
               <h1 className="font-display animate-fadeup delay-2" style={{ fontSize: "clamp(2.2rem, 4vw, 3.4rem)", fontWeight: 800, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 20 }}>
-                Smart Home Search<br />
-                <span style={{ color: "var(--primary)" }}>Powered by Data</span>
+               Plan your first home<br />
+                <span style={{ color: "var(--primary)" }}>with Confidence</span>
               </h1>
 
               <p className="font-body animate-fadeup delay-3" style={{ fontSize: "1.05rem", color: "var(--text-muted)", lineHeight: 1.7, marginBottom: 36, maxWidth: 480 }}>
-                An intelligent platform that combines real-time property data, advanced financial analytics, and interactive mapping to streamline your home buying journey.
+                HomeWay helps you find the perfect house and build a personalized mortgage plan based on your income, expenses, and family needs.
               </p>
 
               <div className="hero-btns animate-fadeup delay-4" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 44 }}>
