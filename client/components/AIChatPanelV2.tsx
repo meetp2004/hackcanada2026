@@ -268,6 +268,32 @@ export function AIChatPanel({
                         )}
                     </button>
 
+                    {/* Pause Button */}
+                    {speaking && (
+                        <button
+                            onClick={() => { if (voiceOn) { audioRef.current?.pause(); audioRef.current = null; window.speechSynthesis?.cancel(); setSpeaking(false) } setVoiceOn(v => !v) }}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '24px',
+                                height: '24px',
+                                color: '#10B981',
+                                transition: 'all 0.2s',
+                                opacity: 1,
+                            }}
+                            title="Pause audio"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="6" y="4" width="4" height="16" />
+                                <rect x="14" y="4" width="4" height="16" />
+                            </svg>
+                        </button>
+                    )}
+
                     {/* Language Selector */}
                     <div style={{ position: 'relative' }}>
                         <button
