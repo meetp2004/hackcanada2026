@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import type { User } from '@supabase/supabase-js'
 import {
     buildVoiceSettings,
     buildPersonaPrompt,
@@ -95,7 +94,7 @@ export function AIChatPanel({
     currentPersona,
     onPersonaUpdate,
 }: {
-    user: User | null
+    user: { id: string; email?: string } | null
     property: Property | null
     onClose: () => void
     currentPersona: PersonaWeights
@@ -151,15 +150,20 @@ export function AIChatPanel({
     const send = async () => {
         const text = input.trim()
         if (!text || loading) return
+
+        if (!user?.id) {
+            setMessages(prev => [...prev, { role: 'assistant', content: 'Please sign in to use MapleEstate AI. Use the Log in button in the top-right corner.' }])
+            return
+        }
+
         setInput('')
         setMessages(prev => [...prev, { role: 'user', content: text }])
         setLoading(true)
 
         try {
-            // Call real Gemini API
             const propertyAddressStr = property ? `${property.address.street_number} ${property.address.street}, ${property.address.city}, ${property.address.state_code}` : undefined;
             const result = await askAI({
-                userId: user?.id || 'anonymous',
+                userId: user.id,
                 userQuery: text,
                 propertyAddress: propertyAddressStr,
             })
@@ -173,11 +177,16 @@ export function AIChatPanel({
                     await speak(aiResponse, updatedWeights, language)
                 }
             } else {
-                setMessages(prev => [...prev, { role: 'assistant', content: 'Failed to get response from AI. Please try again.' }])
+                setMessages(prev => [...prev, { role: 'assistant', content: 'No response from AI. Please try again.' }])
             }
         } catch (e) {
             console.error('Error:', e)
-            setMessages(prev => [...prev, { role: 'assistant', content: 'Connection error. Please check if the backend server is running at http://localhost:5000' }])
+            const msg = e instanceof Error ? e.message : ''
+            if (msg.includes('User not found') || msg.includes('404')) {
+                setMessages(prev => [...prev, { role: 'assistant', content: 'Your account was not found in the system. Please sign out and sign in again.' }])
+            } else {
+                setMessages(prev => [...prev, { role: 'assistant', content: 'Unable to reach the AI service. Please make sure the oracle server is running.' }])
+            }
         } finally {
             setLoading(false)
         }
@@ -351,6 +360,24 @@ export function AIChatPanel({
                     gap: '10px',
                 }}
             >
+                {!user && messages.length === 0 && (
+                    <div style={{
+                        margin: '8px 0', padding: '12px 14px', borderRadius: '10px',
+                        background: '#fef9c3', border: '1px solid #fde68a',
+                        fontSize: '12px', color: '#92400e', lineHeight: 1.5,
+                    }}>
+                        Sign in to start chatting with MapleEstate AI about properties.
+                    </div>
+                )}
+                {user && messages.length === 0 && (
+                    <div style={{
+                        margin: '8px 0', padding: '12px 14px', borderRadius: '10px',
+                        background: '#f0fdf4', border: '1px solid #bbf7d0',
+                        fontSize: '12px', color: '#15803d', lineHeight: 1.5,
+                    }}>
+                        Ask me about this property — schools, ROI, neighbourhood, or anything else!
+                    </div>
+                )}
                 {messages.map((m, i) => (
                     <div
                         key={i}
