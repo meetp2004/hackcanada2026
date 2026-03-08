@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import { createClient } from '@/lib/supabase/client'
-import type { User } from '@supabase/supabase-js'
 import Navbar from '@/components/Navbar'
 import CompareOverlay from '@/components/CompareOverlay'
 import { AIChatPanel } from '@/components/AIChatPanelV2'
@@ -168,14 +166,22 @@ const mapViewStyles = `
   .animate-fadeUp { animation: fadeUp 0.4s ease both; }
 `;
 
+// ── Local session helper ───────────────────────────────────────────────────────
+function loadLocalUser(): { id: string; email?: string } | null {
+  try {
+    const raw = localStorage.getItem('hw_user')
+    if (!raw) return null
+    return JSON.parse(raw)
+  } catch { return null }
+}
+
 // ── Main Home Component ────────────────────────────────────────────────────────
 export default function Home() {
-  const supabase = createClient()
   const mapContainer = useRef<HTMLDivElement>(null)
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const markersRef = useRef<mapboxgl.Marker[]>([])
 
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<{ id: string; email?: string } | null>(null)
   const [properties, setProperties] = useState<Property[]>([])
   const [selected, setSelected] = useState<Property | null>(null)
   const [showChat, setShowChat] = useState(false)
@@ -192,13 +198,9 @@ export default function Home() {
   const [compareList, setCompareList] = useState<Property[]>([])
   const [showCompare, setShowCompare] = useState(false)
 
-  // ── Auth state (read-only — Navbar owns sign-in/out) ─────────────────────────
+  // ── Auth state (read from localStorage — Navbar owns sign-in/out) ────────────
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user ?? null))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      setUser(session?.user ?? null)
-    })
-    return () => subscription.unsubscribe()
+    setUser(loadLocalUser())
   }, [])
 
   // ── Load listings ────────────────────────────────────────────────────────────
@@ -327,10 +329,12 @@ export default function Home() {
       <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg)', paddingTop: '64px' }}>
         {/* ── TOOLBAR ── */}
         <div style={{
-          height: '48px', background: 'var(--bg-card)',
-          borderBottom: '1px solid var(--border)',
+          height: '48px', background: '#f5f5f5',
+          borderBottom: '1px solid #e0e0e0',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '0 16px', flexShrink: 0, zIndex: 100
+          padding: '0 16px', flexShrink: 0, zIndex: 100,
+          ['--text-primary' as string]: '#111827',
+          ['--text-secondary' as string]: '#4b5563',
         }}>
           {/* Sidebar toggle + stats */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -365,9 +369,9 @@ export default function Home() {
               style={{
                 display: 'flex', alignItems: 'center', gap: '6px',
                 padding: '6px 14px',
-                background: compareMode ? '#111827' : 'transparent',
+                background: compareMode ? '#1e6b4a' : 'transparent',
                 color: compareMode ? 'white' : '#374151',
-                border: `1px solid ${compareMode ? '#111827' : '#e5e7eb'}`,
+                border: `1px solid ${compareMode ? '#1e6b4a' : '#d1d5db'}`,
                 borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
                 fontWeight: 500, fontFamily: 'DM Sans, sans-serif',
                 transition: 'all 0.2s',
@@ -395,9 +399,16 @@ export default function Home() {
             minWidth: sidebarOpen ? '340px' : '0',
             overflow: 'hidden',
             transition: 'all 0.3s ease',
-            background: 'var(--bg)',
-            borderRight: '1px solid var(--border)',
-            display: 'flex', flexDirection: 'column'
+            background: '#f5f5f5',
+            borderRight: '1px solid #e0e0e0',
+            display: 'flex', flexDirection: 'column',
+            // Override CSS variables locally for light sidebar
+            ['--bg' as string]: '#f5f5f5',
+            ['--bg-card' as string]: '#ebebeb',
+            ['--border' as string]: 'rgba(0,0,0,0.1)',
+            ['--text-primary' as string]: '#111827',
+            ['--text-secondary' as string]: '#4b5563',
+            ['--text-muted' as string]: '#6b7280',
           }}>
             {/* Filters */}
             <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border)', flexShrink: 0, background: 'var(--bg-card)' }}>
@@ -641,31 +652,31 @@ export default function Home() {
             {selected && (
               <div className="animate-scaleIn" style={{
                 position: 'absolute', top: '16px', left: '16px',
-                width: '300px', background: 'var(--bg-card)',
-                borderRadius: '14px', boxShadow: 'var(--shadow-lg)',
-                border: '1px solid var(--border)', overflow: 'hidden', zIndex: 100
+                width: '300px', background: '#ffffff',
+                borderRadius: '14px', boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+                border: '1px solid #e5e7eb', overflow: 'hidden', zIndex: 100
               }}>
                 {selected.photo && (
                   <img src={selected.photo} alt="" style={{ width: '100%', height: '160px', objectFit: 'cover', display: 'block' }} />
                 )}
                 <div style={{ padding: '16px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <span style={{ fontFamily: 'DM Serif Display, serif', fontSize: '22px', color: 'var(--accent)' }}>
+                    <span style={{ fontFamily: 'DM Serif Display, serif', fontSize: '22px', color: '#C8430A' }}>
                       {fmt(selected.list_price)}
                     </span>
                     <button
                       onClick={() => setSelected(null)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '2px' }}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: '2px' }}
                     >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                       </svg>
                     </button>
                   </div>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginTop: '4px' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#111827', marginTop: '4px' }}>
                     {selected.address.street_number} {selected.address.street}
                   </div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
+                  <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '12px' }}>
                     {selected.address.city}, {selected.address.state_code} · {selected.address.postal_code}
                   </div>
 
@@ -678,8 +689,8 @@ export default function Home() {
                         { label: 'Built', val: selected.description.year_built },
                       ].filter(x => x.val).map(x => (
                         <div key={x.label} style={{ textAlign: 'center' }}>
-                          <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>{x.val}</div>
-                          <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{x.label}</div>
+                          <div style={{ fontSize: '15px', fontWeight: 700, color: '#111827' }}>{x.val}</div>
+                          <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{x.label}</div>
                         </div>
                       ))}
                     </div>
@@ -687,12 +698,12 @@ export default function Home() {
 
                   {selected.agent && (
                     <div style={{
-                      padding: '9px 12px', background: 'var(--bg-deep)',
-                      borderRadius: '8px', marginBottom: '10px'
+                      padding: '9px 12px', background: '#f9fafb',
+                      borderRadius: '8px', marginBottom: '10px', border: '1px solid #f3f4f6'
                     }}>
-                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '1px' }}>Listed by</div>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{selected.agent.name}</div>
-                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{selected.agent.office}</div>
+                      <div style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '1px' }}>Listed by</div>
+                      <div style={{ fontSize: '13px', fontWeight: 600, color: '#111827' }}>{selected.agent.name}</div>
+                      <div style={{ fontSize: '11px', color: '#6b7280' }}>{selected.agent.office}</div>
                     </div>
                   )}
 
