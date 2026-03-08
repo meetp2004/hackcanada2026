@@ -1,5 +1,5 @@
 // server.js — Housing Oracle REST API with debate system
-import 'dotenv/config';
+import './env.js';
 import express from 'express';
 import cors from 'cors';
 import { runPipeline } from './pipeline.js';

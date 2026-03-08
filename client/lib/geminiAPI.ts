@@ -15,9 +15,9 @@ export interface PersonaWeights {
 // ============ ASK AI ============
 
 export interface AskAIRequest {
-    message: string;
-    personaWeights?: PersonaWeights;
-    conversationHistory?: Array<{ role: string; content: string }>;
+    userId: string;
+    userQuery: string;
+    propertyAddress?: string;
 }
 
 export interface AskAIResponse {
@@ -29,7 +29,7 @@ export interface AskAIResponse {
 
 export async function askAI(request: AskAIRequest): Promise<AskAIResponse> {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/ask-ai`, {
+        const response = await fetch(`${API_BASE_URL}/api/query`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +41,17 @@ export async function askAI(request: AskAIRequest): Promise<AskAIResponse> {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        return await response.json();
+        const data = await response.json();
+        return {
+            success: true,
+            response: data.output && data.output.ttsDialogue 
+                      ? data.output.ttsDialogue 
+                      : (data.debate && data.debate.oracle && data.debate.oracle.recommendation 
+                          ? data.debate.oracle.recommendation 
+                          : 'No response available.'),
+            personaWeights: data.orchestration?.personaWeights,
+            timestamp: new Date().toISOString()
+        };
     } catch (error) {
         console.error('Ask AI Error:', error);
         throw error;

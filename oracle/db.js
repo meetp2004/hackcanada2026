@@ -1,6 +1,6 @@
 // db.js — Supabase client
 import { createClient } from '@supabase/supabase-js';
-import 'dotenv/config';
+import './env.js';
 
 const supabase = createClient(
     process.env.SUPABASE_URL,

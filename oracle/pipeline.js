@@ -1,5 +1,5 @@
 // pipeline.js — Main pipeline: orchestrate, agents, synthesis, certificate
-import 'dotenv/config';
+import './env.js';
 import supabase from './db.js';
 import { analyzeIntent, buildDebateStructure } from './orchestrator.js';
 import { runAllAgents } from './agents.js';

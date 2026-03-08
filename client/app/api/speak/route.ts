@@ -10,6 +10,9 @@ interface SpeakRequest {
     language?: string
 }
 
+import fs from 'fs'
+import path from 'path'
+
 export async function POST(request: NextRequest) {
     try {
         const body: SpeakRequest = await request.json()
@@ -22,7 +25,22 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        const apiKey = process.env.ELEVENLABS_API_KEY
+        let apiKey = process.env.ELEVENLABS_API_KEY
+        if (!apiKey) {
+            // Fallback for Next.js isolated API routes when using a unified root .env
+            try {
+                const rootEnvPath = path.resolve(process.cwd(), '../.env')
+                if (fs.existsSync(rootEnvPath)) {
+                    const envData = fs.readFileSync(rootEnvPath, 'utf8')
+                    const match = envData.match(/^ELEVENLABS_API_KEY=(.*)$/m)
+                    if (match) {
+                        apiKey = match[1].trim()
+                    }
+                }
+            } catch (err) {
+                console.warn("Failed to load root .env file in server route for ElevenLabs API KEY")
+            }
+        }
         const voiceId = process.env.ELEVENLABS_VOICE_ID || 'EXAVITQu4vr4xnSDxMaL'
 
         if (!apiKey) {

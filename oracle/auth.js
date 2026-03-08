@@ -1,5 +1,5 @@
 // auth.js — User signup, login, getUser
-import 'dotenv/config';
+import './env.js';
 import supabase from './db.js';
 import bb from './backboard.js';
 

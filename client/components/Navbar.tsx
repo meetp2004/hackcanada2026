@@ -21,6 +21,10 @@ function AuthModal({
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
+  const [annualIncome, setAnnualIncome] = useState('')
+  const [downPayment, setDownPayment] = useState('')
+  const [familySize, setFamilySize] = useState('')
+  const [firstTimeBuyer, setFirstTimeBuyer] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -29,20 +33,45 @@ function AuthModal({
     setError(''); setSuccess(''); setLoading(true)
     try {
       if (mode === 'signup') {
-        const { data, error: e } = await supabase.auth.signUp({
-          email, password,
-          options: { data: { full_name: name } },
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            email, 
+            password, 
+            firstName: name,
+            annualIncome: annualIncome ? parseInt(annualIncome) : undefined,
+            downPayment: downPayment ? parseInt(downPayment) : undefined,
+            familySize: familySize ? parseInt(familySize) : undefined,
+            firstTimeBuyer
+          })
         })
-        if (e) throw e
-        if (data.user && !data.session) {
-          setSuccess('Check your email to confirm your account!')
-        } else if (data.user) {
-          onAuth(data.user)
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.error || 'Signup failed')
+        }
+        const data = await res.json()
+        if (data.session) {
+          await supabase.auth.setSession(data.session)
+          onAuth(data.session.user)
+        } else {
+          setSuccess('Signup successful! Please log in.')
         }
       } else {
-        const { data, error: e } = await supabase.auth.signInWithPassword({ email, password })
-        if (e) throw e
-        if (data.user) onAuth(data.user)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        })
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.error || 'Login failed')
+        }
+        const data = await res.json()
+        if (data.session) {
+          await supabase.auth.setSession(data.session)
+          onAuth(data.session.user)
+        }
       }
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'An error occurred')
@@ -110,12 +139,44 @@ function AuthModal({
         {/* Fields */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
           {mode === 'signup' && (
-            <input
-              placeholder="Full name"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              style={inputStyle}
-            />
+            <>
+              <input
+                placeholder="Full name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                style={inputStyle}
+              />
+              <input
+                type="number"
+                placeholder="Annual Income ($)"
+                value={annualIncome}
+                onChange={e => setAnnualIncome(e.target.value)}
+                style={inputStyle}
+              />
+              <input
+                type="number"
+                placeholder="Down Payment ($)"
+                value={downPayment}
+                onChange={e => setDownPayment(e.target.value)}
+                style={inputStyle}
+              />
+              <input
+                type="number"
+                placeholder="Family Size"
+                value={familySize}
+                onChange={e => setFamilySize(e.target.value)}
+                style={inputStyle}
+              />
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'var(--text-primary)', cursor: 'pointer', padding: '4px' }}>
+                <input
+                  type="checkbox"
+                  checked={firstTimeBuyer}
+                  onChange={e => setFirstTimeBuyer(e.target.checked)}
+                  style={{ cursor: 'pointer' }}
+                />
+                First-time Homebuyer
+              </label>
+            </>
           )}
           <input
             type="email"

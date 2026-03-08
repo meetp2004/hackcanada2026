@@ -45,24 +45,36 @@ NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token
 4. Create a new token or copy existing public token
 5. Paste into `NEXT_PUBLIC_MAPBOX_TOKEN`
 
-## Database Setup
-
 Run this SQL in your Supabase SQL Editor:
 
 ```sql
 -- Create users table
-CREATE TABLE users (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT UNIQUE NOT NULL,
-  full_name TEXT,
-  annual_income NUMERIC,
-  monthly_spending NUMERIC,
-  city TEXT,
-  price_min NUMERIC,
-  price_max NUMERIC,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+CREATE TABLE IF NOT EXISTS public.users (
+  id                   UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email                TEXT UNIQUE NOT NULL,
+  first_name           TEXT,
+  annual_income        INTEGER,
+  down_payment         INTEGER,
+  family_size          INTEGER,
+  first_time_buyer     BOOLEAN DEFAULT TRUE,
+  backboard_thread_id  TEXT UNIQUE,
+  persona_weights      JSONB DEFAULT '{"community":0.25,"family":0.35,"finance":0.25,"investment":0.15}',
+  created_at           TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Queries table to store debate history
+CREATE TABLE IF NOT EXISTS public.queries (
+  id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id               UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_query            TEXT NOT NULL,
+  property_address      TEXT,
+  orchestration_reasoning TEXT,
+  agent_responses       JSONB,
+  oracle_response       JSONB,
+  certificate_id        TEXT UNIQUE,
+  created_at            TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
 
 -- Enable Row Level Security
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;

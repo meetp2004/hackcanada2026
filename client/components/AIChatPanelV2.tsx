@@ -156,23 +156,21 @@ export function AIChatPanel({
         setLoading(true)
 
         try {
-            // Detect persona shift from user input
-            const shift = simulatePersonaShift(text)
-            const updated = updatePersona(currentPersona, shift)
-            onPersonaUpdate(updated)
-
             // Call real Gemini API
+            const propertyAddressStr = property ? `${property.address.street_number} ${property.address.street}, ${property.address.city}, ${property.address.state_code}` : undefined;
             const result = await askAI({
-                message: text,
-                personaWeights: updated,
-                conversationHistory: messages,
+                userId: user?.id || 'anonymous',
+                userQuery: text,
+                propertyAddress: propertyAddressStr,
             })
 
             if (result.success && result.response) {
                 const aiResponse = result.response
+                const updatedWeights = result.personaWeights || currentPersona
+                onPersonaUpdate(updatedWeights)
                 setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }])
                 if (voiceOn) {
-                    await speak(aiResponse, updated, language)
+                    await speak(aiResponse, updatedWeights, language)
                 }
             } else {
                 setMessages(prev => [...prev, { role: 'assistant', content: 'Failed to get response from AI. Please try again.' }])
