@@ -39,12 +39,12 @@ function Field({ label, value, onChange, hint, placeholder = "0" }: { label?: st
   return (
     <div style={{ marginBottom: 18 }}>
       {label && (
-        <label style={{ display: "block", fontSize: "0.72rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 7 }}>
+        <label style={{ display: "block", fontSize: "0.72rem", fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 7 }}>
           {label}
         </label>
       )}
       <div style={{ position: "relative" }}>
-        <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: focused ? "#1e6b4a" : "#9ca3af", fontWeight: 700, fontSize: "0.95rem", pointerEvents: "none", transition: "color 0.2s" }}>$</span>
+        <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: focused ? "#22c55e" : "#6b7280", fontWeight: 700, fontSize: "0.95rem", pointerEvents: "none", transition: "color 0.2s" }}>$</span>
         <input
           type="number"
           value={value === 0 ? "" : value}
@@ -54,13 +54,13 @@ function Field({ label, value, onChange, hint, placeholder = "0" }: { label?: st
           onBlur={() => setFocused(false)}
           style={{
             width: "100%", padding: "13px 14px 13px 34px",
-            background: focused ? "#fff" : "#f9fafb",
-            border: `2px solid ${focused ? "#1e6b4a" : "#e5e7eb"}`,
+            background: focused ? "#f0fdf4" : "#ffffff",
+            border: `2px solid ${focused ? "#16a34a" : "#e5e7eb"}`,
             borderRadius: 12, color: "#111827",
             fontSize: "1rem", fontWeight: 600,
             fontFamily: "'Plus Jakarta Sans', sans-serif",
             outline: "none", transition: "all 0.2s",
-            boxShadow: focused ? "0 0 0 4px rgba(30,107,74,0.08)" : "none",
+            boxShadow: focused ? "0 0 0 4px rgba(22,163,74,0.12)" : "none",
           }}
         />
       </div>
@@ -72,7 +72,7 @@ function Field({ label, value, onChange, hint, placeholder = "0" }: { label?: st
 // ── Card ──────────────────────────────────────────────────────────────────
 function Card({ children, danger = false, style = {} }: { children: React.ReactNode; danger?: boolean; style?: React.CSSProperties }) {
   return (
-    <div style={{ background: danger ? "#fff5f5" : "white", border: `1px solid ${danger ? "#fecaca" : "#e5e7eb"}`, borderRadius: 16, padding: 20, boxShadow: "0 1px 4px rgba(0,0,0,0.05)", ...style }}>
+    <div style={{ background: danger ? "rgba(239,68,68,0.06)" : "#f9fafb", border: `1px solid ${danger ? "rgba(239,68,68,0.2)" : "#e5e7eb"}`, borderRadius: 16, padding: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.05)", ...style }}>
       {children}
     </div>
   );
@@ -116,7 +116,7 @@ function Pill({ label, selected, onClick }: { label: string; selected: boolean; 
 function RangeRow({ label, value, onChange, min, max, step, limit }: { label: string; value: number; onChange: (n: number) => void; min: number; max: number; step: number; limit: number }) {
   const over = value > limit;
   return (
-    <div style={{ padding: "14px 18px", background: over ? "#fff5f5" : "white", border: `1px solid ${over ? "#fecaca" : "#e5e7eb"}`, borderRadius: 14, marginBottom: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
+    <div style={{ padding: "14px 18px", background: over ? "rgba(239,68,68,0.06)" : "#f9fafb", border: `1px solid ${over ? "rgba(239,68,68,0.2)" : "#e5e7eb"}`, borderRadius: 14, marginBottom: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
         <span style={{ fontSize: "0.875rem", fontWeight: 500, color: "#374151" }}>{label}</span>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -135,11 +135,11 @@ function AddRow({ namePlaceholder, name, setName, amount, setAmount, onAdd }: { 
   return (
     <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
       <input value={name} onChange={e => setName(e.target.value)} placeholder={namePlaceholder}
-        style={{ flex: 1, padding: "11px 14px", background: "#f9fafb", border: "2px solid #e5e7eb", borderRadius: 10, color: "#111827", fontSize: "0.875rem", fontFamily: "'Plus Jakarta Sans', sans-serif", outline: "none" }} />
+        style={{ flex: 1, padding: "11px 14px", background: "#ffffff", border: "2px solid #e5e7eb", borderRadius: 10, color: "#111827", fontSize: "0.875rem", fontFamily: "'Plus Jakarta Sans', sans-serif", outline: "none" }} />
       <div style={{ position: "relative", width: 100 }}>
-        <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#9ca3af", fontSize: "0.85rem", pointerEvents: "none" }}>$</span>
+        <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#6b7280", fontSize: "0.85rem", pointerEvents: "none" }}>$</span>
         <input type="number" value={amount || ""} placeholder="0" onChange={e => setAmount(e.target.value === "" ? 0 : Number(e.target.value))}
-          style={{ width: "100%", padding: "11px 10px 11px 24px", background: "#f9fafb", border: "2px solid #e5e7eb", borderRadius: 10, color: "#111827", fontSize: "0.875rem", fontFamily: "'Plus Jakarta Sans', sans-serif", outline: "none" }} />
+          style={{ width: "100%", padding: "11px 10px 11px 24px", background: "#ffffff", border: "2px solid #e5e7eb", borderRadius: 10, color: "#111827", fontSize: "0.875rem", fontFamily: "'Plus Jakarta Sans', sans-serif", outline: "none" }} />
       </div>
       <button onClick={onAdd}
         style={{ padding: "11px 16px", background: "#1e6b4a", border: "none", borderRadius: 10, color: "white", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, fontWeight: 700, fontSize: "0.82rem", fontFamily: "'Plus Jakarta Sans', sans-serif", whiteSpace: "nowrap" }}>
@@ -269,7 +269,7 @@ Write using clear sections with emoji headings. Include:
 8. 12-Month Outlook (will they be better or worse off?)
 9. Top 3 Action Items (specific, numbered, actionable advice)
 
-Keep language plain, direct, and helpful — not jargon-heavy. Be honest even if the picture is negative. Use $ for all currency. Maximum 600 words.
+Write in a clear, professional yet friendly tone — plain English, not financial jargon. Be honest and direct even if the picture is negative. Use $ for all currency values. Write at minimum 1000–1400 words. Each section should contain 2–5 sentences of substantive analysis with specific numbers from the data above, not generic advice.
     `.trim();
 
     try {
@@ -278,7 +278,7 @@ Keep language plain, direct, and helpful — not jargon-heavy. Be honest even if
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{ parts: [{ text: dataPrompt }] }],
-          generationConfig: { maxOutputTokens: 1000 }
+          generationConfig: { maxOutputTokens: 3000 }
         }),
       });
 
@@ -290,14 +290,7 @@ Keep language plain, direct, and helpful — not jargon-heavy. Be honest even if
       const data = await res.json();
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
-      // ONLY NOW set content (state update is async)
       setPdfContent(text);
-      
-
-      // Wait for state to update, then print
-      setTimeout(() => {
-        printReport();
-      }, 100);
 
     } catch (e) {
       console.error("Gemini API Error:", e);
@@ -308,13 +301,7 @@ Keep language plain, direct, and helpful — not jargon-heavy. Be honest even if
   };
 
   const printReport = useCallback(() => {
-    // ADD NULL CHECK
-    console.log("pdfContent", pdfContent);
-
-    if (!pdfContent) {
-      console.log("No content to print");
-      return;
-    }
+    if (!pdfContent) return;
 
     const win = window.open("", "_blank");
     if (!win) {
@@ -1035,23 +1022,21 @@ Keep language plain, direct, and helpful — not jargon-heavy. Be honest even if
           {stepContent[step]}
         </div>
 
-        {/* ── Sticky mini summary (only visible after step 0) ── */}
+        {/* ── Sticky right-side summary panel (only visible after step 0) ── */}
         {step > 0 && totalIncome > 0 && (
-          <div style={{ position: "fixed", bottom: 16, left: "50%", transform: "translateX(-50%)", width: "calc(100% - 32px)", maxWidth: 612 }}>
-            <div style={{ background: "white", borderRadius: 18, padding: "14px 20px", boxShadow: "0 20px 40px rgba(0,0,0,0.11), 0 0 0 1px #f1f5f9" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 6 }}>
-                {[
-                  { label: "Income", value: fmt(totalIncome), color: "#1e6b4a" },
-                  { label: "Outgoings", value: fmt(totalOutgoings), color: "#dc2626" },
-                  { label: "Saving", value: fmt(savingsAmount), color: "#1e6b4a" },
-                  { label: "Balance", value: (balance >= 0 ? "+" : "−") + fmt(balance), color: balance >= 0 ? "#1e6b4a" : "#dc2626" },
-                ].map(item => (
-                  <div key={item.label} style={{ textAlign: "center" }}>
-                    <p style={{ fontSize: "0.6rem", color: "#9ca3af", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 3 }}>{item.label}</p>
-                    <p style={{ fontWeight: 800, fontSize: "0.88rem", color: item.color }}>{item.value}</p>
-                  </div>
-                ))}
-              </div>
+          <div style={{ position: "fixed", right: 20, top: "50%", transform: "translateY(-50%)", zIndex: 100 }}>
+            <div style={{ background: "white", borderRadius: 16, padding: "16px 14px", boxShadow: "0 8px 32px rgba(0,0,0,0.12), 0 0 0 1px #f1f5f9", display: "flex", flexDirection: "column", gap: 14, minWidth: 110 }}>
+              {[
+                { label: "Income", value: fmt(totalIncome), color: "#1e6b4a" },
+                { label: "Outgoings", value: fmt(totalOutgoings), color: "#dc2626" },
+                { label: "Saving", value: fmt(savingsAmount), color: "#1e6b4a" },
+                { label: "Balance", value: (balance >= 0 ? "+" : "−") + fmt(balance), color: balance >= 0 ? "#1e6b4a" : "#dc2626" },
+              ].map((item, i) => (
+                <div key={item.label} style={{ textAlign: "center", paddingBottom: i < 3 ? 14 : 0, borderBottom: i < 3 ? "1px solid #f3f4f6" : "none" }}>
+                  <p style={{ fontSize: "0.58rem", color: "#9ca3af", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 4 }}>{item.label}</p>
+                  <p style={{ fontWeight: 800, fontSize: "0.82rem", color: item.color, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{item.value}</p>
+                </div>
+              ))}
             </div>
           </div>
         )}
