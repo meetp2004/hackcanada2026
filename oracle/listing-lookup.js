@@ -1,5 +1,5 @@
 // listing-lookup.js — Works with real Toronto schools
-import listingsData from './mock-listings.json' assert { type: 'json' };
+import listingsData from './mock-listings.json' with { type: 'json' };
 
 /**
  * Find a property by address (fuzzy match)

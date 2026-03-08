@@ -28,7 +28,7 @@ async function sendMessage(threadId, content) {
         const data = await res.json();
         const raw = data.content ?? data.message ?? data.text ?? '';
 
-        if (!raw || raw.includes('processing') || raw.length < 20) {
+        if (!raw || raw.includes('processing') || raw.includes('Message added successfully') || raw.length < 20) {
             return await pollMessages(threadId);
         }
 
