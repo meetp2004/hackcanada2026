@@ -18,6 +18,8 @@ export interface AskAIRequest {
     userId: string;
     userQuery: string;
     propertyAddress?: string;
+    personaWeights?: PersonaWeights;
+    conversationHistory?: any[];
 }
 
 export interface AskAIResponse {

@@ -39,7 +39,8 @@ export function useAskAI() {
 
             try {
                 const result = await askAI({
-                    message,
+                    userId: 'anonymous-user', // Required by the backend
+                    userQuery: message,
                     personaWeights: persona,
                     conversationHistory: history,
                 });
