@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
                 },
                 body: JSON.stringify({
                     text,
-                    model_id: 'eleven_turbo_v2_5', // Latest model with low latency
+                    model_id: 'eleven_multilingual_v2', // Latest model with low latency
                     voice_settings: settings,
                     language_code: language,
                     optimize_streaming_latency: 3, // 0-4, higher = lower latency
