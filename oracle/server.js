@@ -3,7 +3,7 @@ import './env.js';
 import express from 'express';
 import cors from 'cors';
 import { runPipeline } from './pipeline.js';
-import { signup, login, getUser } from './auth.js';
+import { signup, login, getUser, verifyToken, logout } from './auth.js';
 
 const app = express();
 app.use(cors());
@@ -41,6 +41,31 @@ app.get('/auth/me/:userId', async (req, res) => {
     } catch (err) {
         console.error('[getUser]', err.message);
         res.status(404).json({ error: err.message });
+    }
+});
+
+// POST /auth/verify — validate an access token, return user
+app.post('/auth/verify', async (req, res) => {
+    try {
+        const { access_token } = req.body;
+        if (!access_token) return res.status(400).json({ error: 'access_token required' });
+        const result = await verifyToken(access_token);
+        res.json(result);
+    } catch (err) {
+        console.error('[verify]', err.message);
+        res.status(401).json({ error: err.message });
+    }
+});
+
+// POST /auth/logout — invalidate session server-side
+app.post('/auth/logout', async (req, res) => {
+    try {
+        const { access_token } = req.body;
+        await logout(access_token);
+        res.json({ success: true });
+    } catch (err) {
+        console.error('[logout]', err.message);
+        res.json({ success: true }); // always succeed — client will clear its token
     }
 });
 
